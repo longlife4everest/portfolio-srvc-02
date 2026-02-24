@@ -1,32 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const navLinks = [
-    { name: "About", href: "#about" },
-    { name: "Projects", href: "#projects" },
-    { name: "Certifications", href: "#certifications" },
-    { name: "Contact", href: "#contact" },
+    { name: "01. Home", href: "#hero" },
+    { name: "02. Profile", href: "#about" },
+    { name: "03. Work", href: "#projects" },
+    { name: "04. Connect", href: "#contact" },
 ];
 
 export function Navbar() {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState("");
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-
-            // Simple active section detection
             const sections = navLinks.map((link) => link.href.substring(1));
             let current = "";
             for (const section of sections) {
                 const element = document.getElementById(section);
-                if (element && window.scrollY >= element.offsetTop - 200) {
+                if (element && window.scrollY >= element.offsetTop - 300) {
                     current = section;
                 }
             }
@@ -41,77 +34,39 @@ export function Navbar() {
         e.preventDefault();
         const targetId = href.replace(/.*\#/, "");
         const elem = document.getElementById(targetId);
-        elem?.scrollIntoView({
-            behavior: "smooth",
-        });
-        setIsMobileMenuOpen(false);
+        elem?.scrollIntoView({ behavior: "smooth" });
     };
 
     return (
-        <motion.header
-            className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-[#0B1F3B]/80 backdrop-blur-md border-b border-white/10 shadow-lg" : "bg-transparent py-4"
-                }`}
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5 }}
+        <motion.div
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
         >
-            <div className="container mx-auto px-6 max-w-7xl h-16 flex items-center justify-between">
-                <a href="#" className="text-xl font-bold tracking-tighter text-white glow hover:text-cyan-400 transition-colors">
-                    PORTFOLIO.
-                </a>
-
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) => (
+            <nav className="flex items-center gap-2 p-2 rounded-full glass bg-black/40 border-white/10 shadow-2xl backdrop-blur-2xl">
+                {navLinks.map((link) => {
+                    const isActive = activeSection === link.href.substring(1);
+                    return (
                         <a
                             key={link.name}
                             href={link.href}
                             onClick={(e) => handleScrollTo(e, link.href)}
-                            className={`text-sm font-medium transition-colors hover:text-cyan-400 ${activeSection === link.href.substring(1) ? "text-cyan-400" : "text-slate-300"
+                            className={`relative px-5 py-2.5 rounded-full text-xs tech-mono transition-all duration-300 ${isActive ? "text-black" : "text-white/50 hover:text-white"
                                 }`}
                         >
-                            {link.name}
+                            <span className="relative z-10">{link.name}</span>
+                            {isActive && (
+                                <motion.div
+                                    layoutId="nav-indicator"
+                                    className="absolute inset-0 bg-white rounded-full"
+                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                />
+                            )}
                         </a>
-                    ))}
-                    <Button onClick={(e: any) => handleScrollTo(e, "#contact")} className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full px-6 shadow-[0_0_15px_rgba(56,189,248,0.5)] transition-all hover:scale-105">
-                        Hire Me
-                    </Button>
-                </nav>
-
-                {/* Mobile Nav Toggle */}
-                <button
-                    className="md:hidden text-slate-300 hover:text-white"
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                >
-                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-            </div>
-
-            {/* Mobile Nav Menu */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-[#0F294D] border-b border-white/10 overflow-hidden"
-                    >
-                        <div className="flex flex-col px-6 py-4 gap-4">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.name}
-                                    href={link.href}
-                                    onClick={(e) => handleScrollTo(e, link.href)}
-                                    className={`text-sm font-medium py-2 transition-colors ${activeSection === link.href.substring(1) ? "text-cyan-400" : "text-slate-300"
-                                        }`}
-                                >
-                                    {link.name}
-                                </a>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.header>
+                    );
+                })}
+            </nav>
+        </motion.div>
     );
 }

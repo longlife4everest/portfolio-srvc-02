@@ -50,79 +50,97 @@
 }
 
 :root {
-  --radius: 0.5rem;
-  /* Dark Navy Primary Theme setup */
-  --background: #0B1F3B;
-  --foreground: #F8FAFC;
-  --card: #0F294D;
-  --card-foreground: #F8FAFC;
-  --popover: #0F294D;
-  --popover-foreground: #F8FAFC;
-  --primary: #38BDF8; /* Soft cyan / electric blue glow */
-  --primary-foreground: #020617;
-  --secondary: #1E3A8A; /* Deep blue */
-  --secondary-foreground: #F8FAFC;
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
-  --accent: #1E3A8A;
-  --accent-foreground: #F8FAFC;
+  --radius: 0rem;
+  /* Flat brutalist aesthetic */
+
+  /* Pitch Black Primary Theme setup */
+  --background: #050505;
+  --foreground: #F5F5F5;
+  --card: #0A0A0A;
+  --card-foreground: #F5F5F5;
+  --popover: #0A0A0A;
+  --popover-foreground: #F5F5F5;
+  --primary: #F5F5F5;
+  /* Pure white primary */
+  --primary-foreground: #050505;
+  --secondary: #121212;
+  --secondary-foreground: #F5F5F5;
+  --muted: #171717;
+  --muted-foreground: #888888;
+  --accent: #171717;
+  --accent-foreground: #F5F5F5;
   --destructive: #EF4444;
-  --border: #1E293B;
-  --input: #1E293B;
-  --ring: #38BDF8;
-  --chart-1: #38BDF8;
-  --chart-2: #818CF8;
-  --chart-3: #6366F1;
-  --chart-4: #4F46E5;
-  --chart-5: #4338CA;
-  --sidebar: #0B1F3B;
-  --sidebar-foreground: #F8FAFC;
-  --sidebar-primary: #38BDF8;
-  --sidebar-primary-foreground: #020617;
-  --sidebar-accent: #1E3A8A;
-  --sidebar-accent-foreground: #F8FAFC;
-  --sidebar-border: #1E293B;
-  --sidebar-ring: #38BDF8;
+  --border: #262626;
+  --input: #262626;
+  --ring: #F5F5F5;
+
+  --sidebar: #0A0A0A;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-primary: #F5F5F5;
+  --sidebar-primary-foreground: #050505;
+  --sidebar-accent: #171717;
+  --sidebar-accent-foreground: #F5F5F5;
+  --sidebar-border: #262626;
+  --sidebar-ring: #F5F5F5;
 }
 
 .dark {
-  --background: #0B1F3B;
-  --foreground: #F8FAFC;
-  --card: #0F294D;
-  --card-foreground: #F8FAFC;
-  --popover: #0F294D;
-  --popover-foreground: #F8FAFC;
-  --primary: #38BDF8;
-  --primary-foreground: #020617;
-  --secondary: #1E3A8A;
-  --secondary-foreground: #F8FAFC;
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
-  --accent: #1E3A8A;
-  --accent-foreground: #F8FAFC;
+  --background: #050505;
+  --foreground: #F5F5F5;
+  --card: #0A0A0A;
+  --card-foreground: #F5F5F5;
+  --popover: #0A0A0A;
+  --popover-foreground: #F5F5F5;
+  --primary: #F5F5F5;
+  --primary-foreground: #050505;
+  --secondary: #121212;
+  --secondary-foreground: #F5F5F5;
+  --muted: #171717;
+  --muted-foreground: #888888;
+  --accent: #171717;
+  --accent-foreground: #F5F5F5;
   --destructive: #EF4444;
-  --border: #1E293B;
-  --input: #1E293B;
-  --ring: #38BDF8;
+  --border: #262626;
+  --input: #262626;
+  --ring: #F5F5F5;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground selection:bg-white selection:text-black;
+  }
+
+  /* Disable smooth scroll on html level because we will use framer-motion/lenis if needed */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 @layer utilities {
+  .noise-bg {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
   .clip-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500;
+    @apply bg-clip-text text-transparent bg-white;
   }
+
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
   }
-  .glow {
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+
+  /* Interactive list item border reveals */
+  .list-item-hover {
+    @apply border-b border-white/10 transition-colors duration-300 hover:border-white hover:text-white cursor-pointer;
+  }
+
+  /* Monospace technical utility */
+  .tech-mono {
+    @apply font-mono text-xs tracking-widest uppercase text-muted-foreground;
   }
 }
