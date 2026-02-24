@@ -5,12 +5,13 @@ import { CertificationsSection } from "@/components/sections/certifications";
 import { ContactSection } from "@/components/sections/contact";
 import { CustomCursor } from "@/components/cursor";
 import { Navbar } from "@/components/navbar";
+import { BackgroundScene } from "@/components/scene";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
   return (
     <>
-      <div className="fixed inset-0 mesh-bg z-0" />
+      <BackgroundScene />
       <CustomCursor />
       <Navbar />
       <main className="relative z-10 selection:bg-[var(--primary)] selection:text-[#0B192C]">

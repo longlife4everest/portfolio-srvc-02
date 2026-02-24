@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Download, Github, Linkedin, Mail } from "lucide-react";
-import { ArrowDownRight } from "lucide-react";
+import { motion, AnimatePresence, Variants, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Download, Github, Linkedin, Mail, ArrowDownRight } from "lucide-react";
 
 const terminalLines = [
     "> INITIALIZING_SYSTEM...",
@@ -31,17 +30,33 @@ export function HeroSection() {
         return () => clearInterval(interval);
     }, []);
 
-    const titleVariants: Variants = {
-        hidden: { y: "100%", opacity: 0 },
-        visible: (i: number) => ({
-            y: 0,
-            opacity: 1,
-            transition: {
-                duration: 1,
-                ease: [0.16, 1, 0.3, 1], // Custom spring-like easing
-                delay: i * 0.15,
-            }
-        })
+    // 3D Tilt physics
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseXSpring = useSpring(x);
+    const mouseYSpring = useSpring(y);
+
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+    const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["100%", "0%"]);
+    const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["100%", "0%"]);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const xPct = mouseX / width - 0.5;
+        const yPct = mouseY / height - 0.5;
+        x.set(xPct);
+        y.set(yPct);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
     };
 
     return (
@@ -53,18 +68,19 @@ export function HeroSection() {
                     {/* Left Column: Text & Bio */}
                     <div className="lg:col-span-7 order-2 lg:order-1">
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
                         >
-                            <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium tracking-wide">
+                            <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium tracking-wide shadow-[0_0_15px_rgba(0,229,255,0.2)]">
                                 Available for Fall 2025 Internships
                             </div>
 
                             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
                                 Computer Science <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-blue-500">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-blue-500 relative inline-block">
                                     Student & Developer.
+                                    <div className="absolute -inset-1 blur-2xl opacity-20 bg-[var(--primary)] mix-blend-screen pointer-events-none"></div>
                                 </span>
                             </h1>
 
@@ -108,36 +124,46 @@ export function HeroSection() {
                         </motion.div>
                     </div>
 
-                    {/* Right Column: Image & Decorative Elements */}
-                    <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
+                    {/* Right Column: 3D Image & Decorative Elements */}
+                    <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end" style={{ perspective: "1200px" }}>
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="relative"
+                            transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                            onMouseMove={handleMouseMove}
+                            onMouseLeave={handleMouseLeave}
+                            style={{ rotateX, rotateY }}
+                            className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-2xl cursor-pointer preserve-3d group"
                         >
                             {/* Decorative background glows */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[var(--primary)]/20 blur-[100px] rounded-full z-0 pointer-events-none"></div>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-[var(--primary)]/10 blur-[80px] rounded-full z-0 pointer-events-none group-hover:bg-[var(--primary)]/20 transition-all duration-500"></div>
 
                             {/* Image Container */}
-                            <div className="relative z-10 w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-2xl overflow-hidden glass-card border border-white/20 p-2">
+                            <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden glass-card border border-white/20 p-2 shadow-2xl">
                                 <div className="w-full h-full rounded-xl overflow-hidden bg-[#0A1128] relative">
                                     {/* Placeholder for User Picture */}
                                     <img
                                         src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop"
                                         alt="Student Portrait"
-                                        className="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-105 transition-all duration-700"
+                                        className="w-full h-full object-cover scale-105"
                                     />
-                                    <div className="absolute inset-0 border-2 border-white/10 rounded-xl pointer-events-none"></div>
+                                    <div className="absolute inset-0 border border-white/10 rounded-xl pointer-events-none"></div>
+
+                                    {/* 3D Glare effect */}
+                                    <motion.div
+                                        className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent mix-blend-overlay pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        style={{ left: glareX, top: glareY, transform: 'translate(-50%, -50%) scale(2)' }}
+                                    />
                                 </div>
 
-                                {/* Floating Badge */}
+                                {/* Floating Badge in 3D Space */}
                                 <motion.div
                                     animate={{ y: [0, -10, 0] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute -bottom-6 -left-6 bg-[#0B192C] border border-white/20 p-4 rounded-2xl glass-card shadow-2xl flex items-center gap-4"
+                                    style={{ transform: "translateZ(50px)" }} // Pop out in 3D
+                                    className="absolute -bottom-6 -left-6 bg-[#0B192C] border border-[var(--primary)]/30 p-4 rounded-2xl glass-card shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center gap-4 z-20"
                                 >
-                                    <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xl">
+                                    <div className="w-12 h-12 bg-[var(--primary)]/10 rounded-full flex items-center justify-center text-[var(--primary)] font-bold text-xl ring-1 ring-[var(--primary)]/50">
                                         4.0
                                     </div>
                                     <div>
