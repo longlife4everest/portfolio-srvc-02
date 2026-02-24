@@ -52,7 +52,7 @@ export function CustomCursor() {
                     width: isHovering ? 64 : 12,
                     height: isHovering ? 64 : 12,
                     backgroundColor: isHovering ? "transparent" : "white",
-                    border: isHovering ? "1px solid rgba(255,255,255,0.5)" : "none",
+                    border: isHovering ? "1px solid var(--primary)" : "none",
                 }}
                 animate={{
                     scale: isHovering ? 1.5 : 1,
@@ -60,7 +60,7 @@ export function CustomCursor() {
                 transition={{ duration: 0.2 }}
             >
                 {isHovering && (
-                    <span className="text-[10px] font-mono tracking-widest text-white absolute opacity-70">
+                    <span className="text-[10px] font-mono tracking-widest text-[var(--primary)] absolute opacity-70">
                         CLICK
                     </span>
                 )}

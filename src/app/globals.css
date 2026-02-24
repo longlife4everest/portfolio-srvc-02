@@ -1,146 +1,80 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
-@plugin "tailwindcss-animate";
+@theme {
+  --color-background: #0B192C;
+  --color-foreground: #F8FAFC;
+  --color-primary: #00e5ff;
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-:root {
-  --radius: 0rem;
-  /* Flat brutalist aesthetic */
-
-  /* Pitch Black Primary Theme setup */
-  --background: #050505;
-  --foreground: #F5F5F5;
-  --card: #0A0A0A;
-  --card-foreground: #F5F5F5;
-  --popover: #0A0A0A;
-  --popover-foreground: #F5F5F5;
-  --primary: #F5F5F5;
-  /* Pure white primary */
-  --primary-foreground: #050505;
-  --secondary: #121212;
-  --secondary-foreground: #F5F5F5;
-  --muted: #171717;
-  --muted-foreground: #888888;
-  --accent: #171717;
-  --accent-foreground: #F5F5F5;
-  --destructive: #EF4444;
-  --border: #262626;
-  --input: #262626;
-  --ring: #F5F5F5;
-
-  --sidebar: #0A0A0A;
-  --sidebar-foreground: #F5F5F5;
-  --sidebar-primary: #F5F5F5;
-  --sidebar-primary-foreground: #050505;
-  --sidebar-accent: #171717;
-  --sidebar-accent-foreground: #F5F5F5;
-  --sidebar-border: #262626;
-  --sidebar-ring: #F5F5F5;
+/* Base custom styles without @apply */
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-.dark {
-  --background: #050505;
-  --foreground: #F5F5F5;
-  --card: #0A0A0A;
-  --card-foreground: #F5F5F5;
-  --popover: #0A0A0A;
-  --popover-foreground: #F5F5F5;
-  --primary: #F5F5F5;
-  --primary-foreground: #050505;
-  --secondary: #121212;
-  --secondary-foreground: #F5F5F5;
-  --muted: #171717;
-  --muted-foreground: #888888;
-  --accent: #171717;
-  --accent-foreground: #F5F5F5;
-  --destructive: #EF4444;
-  --border: #262626;
-  --input: #262626;
-  --ring: #F5F5F5;
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground selection:bg-white selection:text-black;
-  }
-
-  /* Disable smooth scroll on html level because we will use framer-motion/lenis if needed */
-  html {
-    scroll-behavior: smooth;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 @layer utilities {
-  .noise-bg {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
+  .glass {}
+
+  .glass-card {
+    @apply bg-white/[0.02] backdrop-blur-2xl border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300;
   }
 
-  .clip-text {
-    @apply bg-clip-text text-transparent bg-white;
+  .text-glow {
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
   }
 
-  .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  .box-glow {
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.15);
   }
 
-  /* Interactive list item border reveals */
-  .list-item-hover {
-    @apply border-b border-white/10 transition-colors duration-300 hover:border-white hover:text-white cursor-pointer;
-  }
-
-  /* Monospace technical utility */
   .tech-mono {
-    @apply font-mono text-xs tracking-widest uppercase text-muted-foreground;
+    @apply font-mono tracking-widest uppercase;
+  }
+
+  /* Animated gradient background */
+  .mesh-bg {
+    background-color: #0B192C;
+    background-image:
+      radial-gradient(at 40% 20%, hsla(191, 97%, 50%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(217, 100%, 30%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(217, 80%, 20%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(191, 80%, 40%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(217, 90%, 30%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, hsla(191, 97%, 50%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, hsla(217, 60%, 10%, 1) 0px, transparent 50%);
+    background-size: 200% 200%;
+    animation: mesh-movement 20s ease infinite;
+  }
+
+  @keyframes mesh-movement {
+    0% {
+      background-position: 0% 0%
+    }
+
+    25% {
+      background-position: 100% 0%
+    }
+
+    50% {
+      background-position: 100% 100%
+    }
+
+    75% {
+      background-position: 0% 100%
+    }
+
+    100% {
+      background-position: 0% 0%
+    }
   }
 }
